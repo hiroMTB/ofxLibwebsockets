@@ -91,31 +91,31 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
   try{
     cout<<"got message "<<args.message<<endl;
     // trace out string messages or JSON messages!
-    if ( !args.json.isNull() ){
-        if (!args.json["setup"].isNull()){
+      if ( !args.json.is_null() ){
+          if (!args.json["setup"].is_null()){
             Drawing * d = new Drawing();
-            d->_id = args.json["setup"]["id"].asInt();
+            d->_id = args.json["setup"]["id"].get<int>();
             // for some reason these come across as strings via JSON.stringify!
-            int r = ofToInt(args.json["setup"]["color"]["r"].asString());
-            int g = ofToInt(args.json["setup"]["color"]["g"].asString());
-            int b = ofToInt(args.json["setup"]["color"]["b"].asString());
+            int r = ofToInt(args.json["setup"]["color"]["r"].get<string>());
+            int g = ofToInt(args.json["setup"]["color"]["g"].get<string>());
+            int b = ofToInt(args.json["setup"]["color"]["b"].get<string>());
             d->color.set(r, g, b);
             drawings.insert( make_pair( d->_id, d ));
             id = d->_id;
             color.set(r, g, b);
             cout << "setup with id:" << id << endl;
         }
-        else if (args.json["id"].asInt() != id){
+        else if (args.json["id"].get<int>() != id){
           cout << "received point" << endl;
-            ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
+            ofPoint point = ofPoint( args.json["point"]["x"].get<float>(), args.json["point"]["y"].get<float>() );
             
             // for some reason these come across as strings via JSON.stringify!
-            int r = ofToInt(args.json["color"]["r"].asString());
-            int g = ofToInt(args.json["color"]["g"].asString());
-            int b = ofToInt(args.json["color"]["b"].asString());
+            int r = ofToInt(args.json["color"]["r"].get<string>());
+            int g = ofToInt(args.json["color"]["g"].get<string>());
+            int b = ofToInt(args.json["color"]["b"].get<string>());
             ofColor color = ofColor( r, g, b );
             
-            int _id = args.json["id"].asInt();
+            int _id = args.json["id"].get<int>();
             
             map<int, Drawing*>::const_iterator it = drawings.find(_id);
             Drawing * d;
@@ -126,9 +126,9 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
               d = new Drawing();
               d->_id = _id;
               // for some reason these come across as strings via JSON.stringify!
-              int r = ofToInt(args.json["color"]["r"].asString());
-              int g = ofToInt(args.json["color"]["g"].asString());
-              int b = ofToInt(args.json["color"]["b"].asString());
+              int r = ofToInt(args.json["color"]["r"].get<string>());
+              int g = ofToInt(args.json["color"]["g"].get<string>());
+              int b = ofToInt(args.json["color"]["b"].get<string>());
               d->color.set(r, g, b);
               drawings.insert( make_pair( d->_id, d ));
               cout << "new drawing with id:" << _id << endl;
